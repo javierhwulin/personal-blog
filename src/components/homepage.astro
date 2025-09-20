@@ -1,0 +1,69 @@
+---
+import type { BlogPost, GlobImportResult } from "../types/blog";
+
+const globResult = import.meta.glob("../content/blog/*.md", {
+  eager: true,
+}) as GlobImportResult;
+const posts: BlogPost[] = Object.values(globResult);
+
+// Format date
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+---
+
+<section class="max-w-screen-lg mx-auto px-4 py-16">
+  {
+    posts
+      .sort(
+        (a: BlogPost, b: BlogPost) =>
+          new Date(b.frontmatter.pubDate).getTime() -
+          new Date(a.frontmatter.pubDate).getTime()
+      )
+      .map((post: BlogPost) => {
+        return (
+          <a
+            href={`/posts/${post.frontmatter.slug}`}
+            class="block group transition-all duration-300"
+          >
+            <article>
+              <div class="flex flex-col gap-3">
+                <div>
+                  <h1
+                    class="text-xl font-bold tracking-tight text-foreground group-hover:text-primary/60 transition-colors duration-300 mb-3 max-w-2xl"
+                    style="font-family: 'Merriweather', serif;"
+                  >
+                    {post.frontmatter.title}
+                  </h1>
+                  <div class="flex items-center gap-3 text-sm text-muted-foreground">
+                    <time
+                      datetime={post.frontmatter.pubDate}
+                      class="font-medium tracking-wide"
+                    >
+                      {formatDate(new Date(post.frontmatter.pubDate))}
+                    </time>
+                    <span class="w-1 h-1 bg-muted-foreground/50 rounded-full" />
+                    {post.frontmatter.readTime && (
+                      <span class="font-medium tracking-wide">
+                        {post.frontmatter.readTime}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div class="space-y-4 max-w-prose">
+                  <p class="text-base text-foreground/90 leading-relaxed font-light">
+                    {post.frontmatter.description}
+                  </p>
+                </div>
+              </div>
+            </article>
+          </a>
+        );
+      })
+  }
+</section>

@@ -1,0 +1,84 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: {
+      slug: post.slug,
+    },
+    props: { post },
+  }));
+}
+
+type Props = {
+  post: CollectionEntry<"blog">;
+};
+
+const { post } = Astro.props as Props;
+const { Content } = await post.render();
+
+// Format date
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+---
+
+<Layout>
+  <main class="max-w-screen-lg mx-auto px-4 py-16">
+    <article class="max-w-prose mx-auto">
+      <!-- Back to home link -->
+      <nav class="mb-8">
+        <a
+          href="/"
+          class="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
+        >
+          ← Back to home
+        </a>
+      </nav>
+
+      <!-- Article header -->
+      <header class="mb-12">
+        <h1
+          class="text-4xl font-bold tracking-tight text-foreground mb-3 leading-tight"
+          style="font-family: 'Merriweather', serif;"
+        >
+          {post.data.title}
+        </h1>
+
+        <div
+          class="flex items-center gap-3 text-sm text-muted-foreground mb-5 tracking-wide"
+        >
+          <time
+            datetime={post.data.pubDate.toISOString()}
+            class="font-medium tracking-wide"
+          >
+            {formatDate(post.data.pubDate)}
+          </time>
+
+          <span class="w-1 h-1 bg-muted-foreground/50 rounded-full"></span>
+          <span class="font-medium tracking-wide"> {post.data.readTime} </span>
+        </div>
+
+        {
+          post.data.description && (
+            <p class="text-base text-foreground/80 leading-relaxed font-light">
+              {post.data.description}
+            </p>
+          )
+        }
+      </header>
+
+      <!-- Article content -->
+      <div class="prose max-w-2xl mx-auto leading-relaxed space-y-8">
+        <Content />
+      </div>
+    </article>
+  </main>
+</Layout>
