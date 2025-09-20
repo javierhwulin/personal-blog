@@ -1,5 +1,4 @@
 ---
-import icon from "astro-icon";
 import { Github, Linkedin, Twitter, Mail } from "@lucide/astro";
 ---
 
@@ -8,19 +7,28 @@ import { Github, Linkedin, Twitter, Mail } from "@lucide/astro";
 >
   <span>&copy; Javier Hengda Wu Lin</span>
   <div class="flex flex-row justify-between gap-6">
-    <a href="https://github.com/javierhwulin" target="_blank">
+    <a
+      href="https://github.com/javierhwulin"
+      target="_blank"
+      aria-label="Github"
+    >
       <Github class="w-4 h-4" />
     </a>
     <a
       href="https://www.linkedin.com/in/javier-hengda-wu-lin-51a98a189/"
       target="_blank"
+      aria-label="Linkedln"
     >
       <Linkedin class="w-4 h-4" />
     </a>
-    <a href="https://x.com/hengda_wu" target="_blank">
+    <a href="https://x.com/hengda_wu" target="_blank" aria-label="Twitter">
       <Twitter class="w-4 h-4" />
     </a>
-    <a href="mailto:javier.hwulin.devtech@gmail.com" target="_blank">
+    <a
+      href="mailto:javier.hwulin.devtech@gmail.com"
+      target="_blank"
+      aria-label="Mail"
+    >
       <Mail class="w-4 h-4" />
     </a>
   </div>
